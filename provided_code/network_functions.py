@@ -172,7 +172,7 @@ class PredictionModel(DefineDoseFromCT):
         :param epoch: The epoch that should be loaded to make predictions
         """
         # Define new models, or load most recent model if model already exists
-        self.generator = load_model('{}{}.h5'.format(self.model_path_template, epoch), custom_objects={'loss' : DefineDoseFromCT.weighted_MSE})
+        self.generator = load_model('{}{}.h5'.format(self.model_path_template, epoch), compile=False)
         os.makedirs(self.prediction_dir, exist_ok=True)
         # Use generator to predict dose
         number_of_batches = self.data_loader.number_of_batches()
