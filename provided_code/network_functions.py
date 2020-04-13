@@ -45,7 +45,7 @@ class PredictionModel(DefineDoseFromCT):
         self.initial_number_of_filters = 1  # 64
 
         # Define model optimizer
-        self.gen_optimizer = Adam(lr=0.0002, decay=0.001, beta_1=0.5, beta_2=0.999)
+        self.gen_optimizer = Adam(lr=0.002, decay=0.001, beta_1=0.5, beta_2=0.999)
 
         # Define place holders for model
         self.generator = None
@@ -150,8 +150,16 @@ class PredictionModel(DefineDoseFromCT):
         :param epoch_number: The epoch
         """
         # Load images
-        image_batch = self.data_loader.get_batch(batch_index)
-
+        image_batch_raw = self.data_loader.get_batch(batch_index)
+        image_batch = {}
+        for k,v in image_batch_raw.items():
+            if k in ['dose', 'structure_masks', 'possible_dose_mask']:
+                image_batch[k] = v[:, 35:99,:,:,:]
+            elif:
+                image_batch[k] = v[:, 35:99,:,:,:]/ 4076.
+            else:
+                image_batch[k] = v
+        
         # Train the generator model with the batch
         model_loss = self.generator.train_on_batch([image_batch['ct'], image_batch['structure_masks']],
                                                    image_batch['dose'])
@@ -164,13 +172,21 @@ class PredictionModel(DefineDoseFromCT):
         :param epoch: The epoch that should be loaded to make predictions
         """
         # Define new models, or load most recent model if model already exists
-        self.generator = load_model('{}{}.h5'.format(self.model_path_template, epoch))
+        self.generator = load_model('{}{}.h5'.format(self.model_path_template, epoch), custom_objects={'loss' : DefineDoseFromCT.weighted_MSE})
         os.makedirs(self.prediction_dir, exist_ok=True)
         # Use generator to predict dose
         number_of_batches = self.data_loader.number_of_batches()
         print('Predicting dose')
         for idx in tqdm.tqdm(range(number_of_batches)):
-            image_batch = self.data_loader.get_batch(idx)
+            image_batch_raw = self.data_loader.get_batch(idx)
+            image_batch = {}
+            for k,v in image_batch_raw.items():
+                if k in ['dose', 'structure_masks', 'possible_dose_mask']:
+                    image_batch[k] = v[:, 35:99,:,:,:]
+                elif:
+                    image_batch[k] = v[:, 35:99,:,:,:]/ 4076.
+                else:
+                    image_batch[k] = v
 
             # Get patient ID and make a prediction
             pat_id = image_batch['patient_list'][0]
