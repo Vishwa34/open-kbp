@@ -155,7 +155,7 @@ class PredictionModel(DefineDoseFromCT):
         for k,v in image_batch_raw.items():
             if k in ['dose', 'structure_masks', 'possible_dose_mask']:
                 image_batch[k] = v[:, 35:99,:,:,:]
-            elif:
+            elif k=='ct':
                 image_batch[k] = v[:, 35:99,:,:,:]/ 4076.
             else:
                 image_batch[k] = v
@@ -183,7 +183,7 @@ class PredictionModel(DefineDoseFromCT):
             for k,v in image_batch_raw.items():
                 if k in ['dose', 'structure_masks', 'possible_dose_mask']:
                     image_batch[k] = v[:, 35:99,:,:,:]
-                elif:
+                elif k =='ct':
                     image_batch[k] = v[:, 35:99,:,:,:]/ 4076.
                 else:
                     image_batch[k] = v
