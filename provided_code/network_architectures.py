@@ -11,9 +11,13 @@ class DefineDoseFromCT:
     executes various functions like training or predicting"""
     
     def weighted_MSE(self, y_true, y_pred):
-        from keras import backend as K
+        from tensorflow.python.keras import backend as K
+        from tensorflow.python.ops import math_ops
+        from tensorflow.python.framework import ops
         y_true = y_true*5
-        return K.MSE(y_true, y_pred)
+        y_pred = ops.convert_to_tensor(y_pred)
+        y_true = math_ops.cast(y_true, y_pred.dtype)
+        return K.mean(math_ops.squared_difference(y_pred, y_true), axis = -1)
 
     def generator_convolution(self, x, number_of_filters, use_batch_norm=True):
         """Convolution block used for generator"""
