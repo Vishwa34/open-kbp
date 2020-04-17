@@ -78,7 +78,7 @@ def sparse_vector_function(x, indices=None):
     :return:  sparse vector in the form of a dictionary
     """
     if indices is None:
-        y = {'data': x[x > 0], 'indices': np.nonzero(x.flatten())[-1] + 557056}
+        y = {'data': x[x > 0], 'indices': np.nonzero(x.flatten())[-1] + 573440}
     else:
         y = {'data': x[x > 0], 'indices': indices[x > 0]}
     return y
