@@ -95,7 +95,6 @@ class DataLoader:
                                    'voxel_dimensions': (3,)  # Physical dimensions (in mm) of voxels
                                    }
             self.batch_size = 1
-            print('Warning: Batch size has been changed to 1 for dose prediction mode')
 
         elif mode_name == 'predicted_dose':
             # This mode loads a single feature (e.g., dose, masks for all structures)
@@ -109,7 +108,6 @@ class DataLoader:
                                    'possible_dose_mask': (self.patient_shape + (1,)),
                                    }
             self.batch_size = 1
-            print('Warning: Batch size has been changed to 1 for evaluation mode')
 
         else:
             print('Mode does not exist. Please re-run with either \'training_model\', \'prediction\', '
